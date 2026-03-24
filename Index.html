@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Miller Packing">
+<title>Miller Family Packing 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+:root {
+  --bg:#f0f4f8;--surface:#fff;--surface2:#f8fafc;--border:#e2e8f0;
+  --text:#1a202c;--muted:#718096;--accent:#667eea;--accent2:#764ba2;
+  --green:#48bb78;--green-bg:#f0fff4;--red:#fc5c7d;
+  --checked-text:#a0aec0;--checked-bg:#f7fafc;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 25px rgba(0,0,0,.15);
+  --r:14px;--r-sm:8px;--tap:52px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+.header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:14px 14px 0;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(102,126,234,.4)}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.header-left{flex:1;min-width:0}
+.header-title{font-size:18px;font-weight:900;letter-spacing:-.3px}
+.header-sub{font-size:11px;opacity:.8;font-weight:600;margin-top:1px}
+.header-actions{display:flex;gap:8px;flex-shrink:0}
+.hbtn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 12px;border-radius:20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;min-height:38px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hbtn:active{background:rgba(255,255,255,.35)}
+.hbtn.active-mode{background:rgba(255,220,50,.3);color:#ffe566}
+.days-bar{background:rgba(255,255,255,.15);margin:0 -14px;padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.1)}
+.days-label{font-size:13px;font-weight:700;color:#fff;opacity:.9;flex-shrink:0}
+.days-stepper{display:flex;align-items:center;background:rgba(255,255,255,.2);border-radius:20px;overflow:hidden}
+.days-btn{border:none;background:transparent;color:#fff;font-size:18px;font-weight:900;padding:6px 13px;cursor:pointer;line-height:1;min-height:34px;display:flex;align-items:center;justify-content:center}
+.days-btn:active{background:rgba(255,255,255,.2)}
+.days-val{color:#fff;font-size:15px;font-weight:900;min-width:28px;text-align:center}
+.days-note{font-size:11px;color:rgba(255,255,255,.7);font-weight:600}
+.person-tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:0;scrollbar-width:none}
+.person-tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:9px 14px;border-radius:10px 10px 0 0;font-size:13px;font-weight:800;cursor:pointer;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.75);white-space:nowrap;display:flex;align-items:center;gap:5px;min-height:40px}
+.tab.active{background:var(--surface);color:var(--accent)}
+.tab .badge{background:rgba(255,255,255,.3);border-radius:10px;font-size:10px;padding:1px 5px;font-weight:800}
+.tab.active .badge{background:var(--accent);color:#fff}
+.progress-area{background:var(--surface);padding:11px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.progress-bar-wrap{flex:1;background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:99px;transition:width .4s ease}
+.progress-label{font-size:13px;font-weight:800;color:var(--accent);min-width:44px;text-align:right}
+.filters{background:var(--surface);padding:9px 14px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 13px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:var(--surface);color:var(--muted);min-height:34px;display:flex;align-items:center}
+.chip.active{border-color:var(--accent);background:#ede9fe;color:var(--accent)}
+.chip:active{transform:scale(.95)}
+.content{padding:12px;padding-bottom:40px}
+.cat-block{margin-bottom:14px}
+.cat-header{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:4px 4px 8px;display:flex;align-items:center;gap:6px}
+.cat-count{background:var(--border);border-radius:99px;padding:1px 7px;font-size:10px;color:var(--muted)}
+.cat-count.done{background:var(--green-bg);color:var(--green)}
+.items-list{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.item-row{display:flex;align-items:center;min-height:var(--tap);padding:0 12px;border-bottom:1px solid var(--border);cursor:pointer;gap:10px;user-select:none;-webkit-user-select:none;transition:background .12s}
+.item-row:last-child{border-bottom:none}
+.item-row:active:not(.edit-row){background:var(--surface2)}
+.item-row.checked{background:var(--checked-bg)}
+.check-circle{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;background:var(--surface)}
+.item-row.checked .check-circle{border-color:var(--green);background:var(--green)}
+.checkmark{display:none;color:#fff;font-size:14px;font-weight:900}
+.item-row.checked .checkmark{display:block}
+.item-name{flex:1;font-size:15px;font-weight:700;line-height:1.3;transition:color .15s}
+.item-row.checked .item-name{color:var(--checked-text);text-decoration:line-through}
+.item-qty{font-size:12px;font-weight:800;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;flex-shrink:0}
+.item-row.checked .item-qty{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.item-row.edit-row{cursor:default;background:var(--surface)}
+.edit-row .check-circle{display:none}
+.edit-row .item-qty{display:none}
+.edit-controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.qty-edit{width:52px;border:2px solid var(--border);border-radius:var(--r-sm);padding:4px 6px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;text-align:center;color:var(--text);background:var(--surface2)}
+.qty-edit:focus{outline:none;border-color:var(--accent)}
+.del-btn{background:none;border:none;color:#cbd5e0;font-size:18px;cursor:pointer;padding:6px;line-height:1;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-sm)}
+.del-btn:active{color:var(--red);background:#fff0f3}
+.rate-btn{background:none;border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;padding:3px 6px;border-radius:6px;line-height:1.2;white-space:nowrap}
+.rate-btn.active{background:#ede9fe;border-color:var(--accent);color:var(--accent)}
+.add-item-row{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--surface2);border-top:2px dashed var(--border)}
+.add-input{flex:1;border:2px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);background:var(--surface)}
+.add-input:focus{outline:none;border-color:var(--accent)}
+.add-qty{width:50px;border:2px solid var(--border);border-radius:var(--r-sm);padding:8px 5px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;text-align:center;color:var(--text);background:var(--surface)}
+.add-qty:focus{outline:none;border-color:var(--accent)}
+.add-btn{background:var(--accent);border:none;color:#fff;border-radius:var(--r-sm);padding:8px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;min-height:var(--tap);display:flex;align-items:center}
+.add-btn:active{opacity:.85}
+.add-cat-row{display:flex;align-items:center;gap:8px;padding:12px;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin-top:12px}
+.add-cat-input{flex:1;border:2px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);background:var(--surface2)}
+.add-cat-input:focus{outline:none;border-color:var(--accent)}
+.add-cat-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;border-radius:var(--r-sm);padding:10px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;min-height:var(--tap);display:flex;align-items:center}
+.add-cat-btn:active{opacity:.85}
+.cat-del-btn{background:none;border:none;color:#cbd5e0;font-size:16px;cursor:pointer;padding:4px;line-height:1;margin-left:2px}
+.cat-del-btn:active{color:var(--red)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;align-items:flex-end;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:20px;padding:22px;width:100%;max-width:400px;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h2{font-size:17px;font-weight:900;margin-bottom:8px}
+.modal p{font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.modal-btns{display:flex;flex-direction:column;gap:9px}
+.btn{padding:14px;border-radius:var(--r);border:none;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;min-height:var(--tap)}
+.btn-cancel{background:var(--surface2);color:var(--muted)}
+.btn-danger{background:linear-gradient(135deg,#fc5c7d,#6a3093);color:#fff}
+.btn-warn{background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div class="header-left">
+      <div class="header-title">✈️ Miller Family 2026</div>
+      <div class="header-sub" id="headerSub">Tap any item to pack it</div>
+    </div>
+    <div class="header-actions">
+      <button class="hbtn" id="editBtn" onclick="toggleEditMode()">✏️ Edit</button>
+      <button class="hbtn" onclick="openReset()">🔄 Reset</button>
+    </div>
+  </div>
+  <div class="days-bar">
+    <span class="days-label">Trip Length:</span>
+    <div class="days-stepper">
+      <button class="days-btn" onclick="changeDays(-1)">−</button>
+      <span class="days-val" id="daysVal">10</span>
+      <button class="days-btn" onclick="changeDays(1)">+</button>
+    </div>
+    <span class="days-note">days · quantities auto-update</span>
+  </div>
+  <div class="person-tabs" id="personTabs"></div>
+</div>
+<div class="progress-area">
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel">0%</div>
+</div>
+<div class="filters" id="catFilters"></div>
+<div class="content" id="content"></div>
+<div class="overlay" id="resetModal">
+  <div class="modal">
+    <h2>🔄 Reset Packing List</h2>
+    <p>Choose what to reset. Checked items will be cleared.</p>
+    <div class="modal-btns">
+      <button class="btn btn-warn" onclick="resetPerson()">Reset <span id="resetPersonName"></span> Only</button>
+      <button class="btn btn-danger" onclick="resetAll()">Reset Everyone</button>
+      <button class="btn btn-cancel" onclick="closeModal('resetModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="delItemModal">
+  <div class="modal">
+    <h2>🗑 Delete Item?</h2>
+    <p id="delItemMsg"></p>
+    <div class="modal-btns">
+      <button class="btn btn-danger" onclick="confirmDelItem()">Delete</button>
+      <button class="btn btn-cancel" onclick="closeModal('delItemModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="delCatModal">
+  <div class="modal">
+    <h2>🗑 Delete Category?</h2>
+    <p id="delCatMsg"></p>
+    <div class="modal-btns">
+      <button class="btn btn-danger" onclick="confirmDelCat()">Delete</button>
+      <button class="btn btn-cancel" onclick="closeModal('delCatModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+const DD = {
+  Noah:{emoji:'🧡',categories:{
+    'Clothes':[
+      {n:'Short Sleeve',qpd:1.3,fixed:0},{n:'Long sleeve',qpd:0,fixed:5},{n:'Tank top',qpd:0.5,fixed:0},
+      {n:'Rain coat',qpd:0,fixed:1},{n:'Hoodie',qpd:0,fixed:2},{n:'Jacket',qpd:0,fixed:1},
+      {n:'Bibs',qpd:5,fixed:0},{n:'Underwear',qpd:1,fixed:0},{n:'Pants',qpd:1,fixed:0},
+      {n:'Shorts',qpd:1.3,fixed:0},{n:'Socks',qpd:1,fixed:0},{n:'Sandals',qpd:0,fixed:1},
+      {n:'Shoes',qpd:0,fixed:1},{n:'Water Shoes',qpd:0,fixed:1},{n:'Swimming suit',qpd:0,fixed:1},
+      {n:'Swim diaper',qpd:0,fixed:1},{n:'Swim Shirt',qpd:0,fixed:1},{n:'Pajamas',qpd:1,fixed:0},
+      {n:'Hats',qpd:0.25,fixed:0},{n:'Formal Wear',qpd:0,fixed:1}
+    ],
+    'Food & Feeding':[
+      {n:'Breakfast Blend',qpd:1.3,fixed:0},{n:'AM Snack',qpd:1.3,fixed:0},{n:'Lunch',qpd:1.3,fixed:0},
+      {n:'PM Snack',qpd:1.3,fixed:0},{n:'Dinner',qpd:1.3,fixed:0},{n:'Syringes',qpd:0,fixed:1},
+      {n:'Caps',qpd:0,fixed:1},{n:'Ziplock bags',qpd:0,fixed:1},{n:'Paper towels',qpd:0,fixed:1},
+      {n:'Ice packs',qpd:0,fixed:1},{n:'Cooler bag',qpd:0,fixed:1},{n:'Extensions',qpd:0,fixed:1},
+      {n:'Dish detergent',qpd:0,fixed:1}
+    ],
+    'Medications':[
+      {n:'Sertraline/syringe',qpd:1.2,fixed:0},{n:'Trazadone/syringes',qpd:1.2,fixed:0},
+      {n:'Lamictal/syringe',qpd:1.2,fixed:0},{n:'Clonazepam',qpd:1.2,fixed:0},
+      {n:'Acid Pills/syringe',qpd:1.2,fixed:0},{n:'Zofran',qpd:1.2,fixed:0},
+      {n:'Caps (med)',qpd:0,fixed:1},{n:'Pill crusher',qpd:0,fixed:1},{n:'Cup/spoon',qpd:0,fixed:1},
+      {n:'IB',qpd:0,fixed:1},{n:'Tylenol',qpd:0,fixed:1},{n:'Benadryl',qpd:0,fixed:1},
+      {n:'Cold Meds',qpd:0,fixed:1},{n:'Afrin',qpd:0,fixed:1},{n:'Nasonex',qpd:0,fixed:1},
+      {n:'Atropine',qpd:0,fixed:1},{n:'Eye Steroids',qpd:0,fixed:1},{n:'Eye Antibiotic',qpd:0,fixed:1},
+      {n:'Chest Rub',qpd:0,fixed:1},{n:'Saline Spray',qpd:0,fixed:1},{n:'Nausea patch',qpd:0,fixed:1},
+      {n:'Diastat',qpd:0,fixed:1},{n:'Ace Foley kit',qpd:0,fixed:1},{n:'Button Kit',qpd:0,fixed:1},
+      {n:'Lubricant',qpd:0,fixed:1},{n:'Puke Bags',qpd:0,fixed:1}
+    ],
+    'Enema Supplies':[
+      {n:'Big toilet chair',qpd:0,fixed:1},{n:'Toilet Travel bag',qpd:0,fixed:1},
+      {n:'Foot rest',qpd:0,fixed:1},{n:'Toilet Seat',qpd:1,fixed:0},
+      {n:'Toilet seat covers',qpd:1,fixed:0},{n:'Cut bags',qpd:1,fixed:0},
+      {n:'Garbage bags',qpd:1,fixed:0},{n:'Toilet straps',qpd:0,fixed:1},
+      {n:'Diaper pail bag',qpd:0,fixed:1},{n:'Febreze',qpd:0,fixed:1},{n:'Poo-pourri',qpd:0,fixed:1},
+      {n:'Enema bag',qpd:0,fixed:1},{n:'Extension',qpd:0,fixed:1},{n:'Command hook',qpd:0,fixed:1},
+      {n:'Butt wipes',qpd:0,fixed:1},{n:'Clorox wipes',qpd:0,fixed:1},
+      {n:'Salt',qpd:1,fixed:0},{n:'Teaspoon',qpd:0,fixed:1},{n:'Measuring cup',qpd:0,fixed:1},
+      {n:'Glycerin',qpd:1,fixed:0},{n:'Glycerin syringe',qpd:0,fixed:1},
+      {n:'Castile soap',qpd:1,fixed:0},{n:'Castile syringe',qpd:0,fixed:1},{n:'Gloves',qpd:2,fixed:0}
+    ],
+    'Hygiene & Skin':[
+      {n:'Chux Pads',qpd:3,fixed:0},{n:'Button pads',qpd:4,fixed:0},{n:'Gauze',qpd:1,fixed:0},
+      {n:'Q-tips',qpd:4,fixed:0},{n:'Tape',qpd:0,fixed:1},{n:'Toothettes',qpd:4,fixed:0},
+      {n:'Butt Cream',qpd:0,fixed:1},{n:'Triamcinolone',qpd:0,fixed:1},
+      {n:'Disposable wash cloths',qpd:0,fixed:1},{n:'Face lotion',qpd:0,fixed:1},
+      {n:'Body lotion',qpd:0,fixed:1},{n:'Sunblock',qpd:0,fixed:1},
+      {n:'Diapers',qpd:8,fixed:0},{n:'Diaper wipes',qpd:0,fixed:1},
+      {n:'Toothbrush',qpd:0,fixed:1},{n:'Toothpaste',qpd:0,fixed:1},{n:'Hair Brush',qpd:0,fixed:1},
+      {n:'Soap',qpd:0,fixed:1},{n:'Loofah',qpd:0,fixed:1},{n:'Shampoo',qpd:0,fixed:1},
+      {n:'Zip cream',qpd:0,fixed:1},{n:'Nose sucker',qpd:0,fixed:1},{n:'Nose wipes',qpd:0,fixed:1},
+      {n:'Eucerin',qpd:0,fixed:1}
+    ],
+    'Wheelchair & Seating':[
+      {n:'Wheelchair',qpd:0,fixed:1},{n:'Wheelchair Tools',qpd:0,fixed:1},
+      {n:'Extra wheelchair seat pad',qpd:0,fixed:1},{n:'Wheelchair seat cover',qpd:0,fixed:1},
+      {n:'Wheelchair rain cover',qpd:0,fixed:1},{n:'Arm straps',qpd:0,fixed:1},
+      {n:'Umbrella/visor',qpd:0,fixed:1},{n:'Cup/toy holder',qpd:0,fixed:1},
+      {n:'Carabiners',qpd:0,fixed:1},{n:'Diaper bag lock',qpd:0,fixed:1},
+      {n:'Wheelchair zip ties',qpd:0,fixed:1},{n:'Wheelchair hooks',qpd:0,fixed:1},
+      {n:'Airport Travel Bag',qpd:0,fixed:1},{n:'Wheel pump',qpd:0,fixed:1},
+      {n:'Wheelchair hand sanitizer',qpd:0,fixed:1},{n:'Wheelchair ChapStick',qpd:0,fixed:1},
+      {n:'Wheelchair mosquito net',qpd:0,fixed:1},{n:'Wheelchair sunblock',qpd:0,fixed:1},
+      {n:'Lysol spray (wheels/shoes)',qpd:0,fixed:1},
+      {n:'Fold up lawn chair',qpd:0,fixed:1},{n:'Chair harness strap',qpd:0,fixed:1},
+      {n:'Transfer seat/sling',qpd:0,fixed:1},{n:'Floor Pad',qpd:0,fixed:1}
+    ],
+    'Bedding':[
+      {n:'Tent',qpd:0,fixed:1},{n:'Bungee chords',qpd:0,fixed:1},{n:'Pillow',qpd:0,fixed:1},
+      {n:'Blanket',qpd:0,fixed:1},{n:'Bedding fitted sheet',qpd:0,fixed:1},
+      {n:'Regular sheet',qpd:0,fixed:1},{n:'Plastic sheet',qpd:0,fixed:1},
+      {n:'Pillow case',qpd:0,fixed:1},{n:'Pee pads',qpd:0,fixed:1},
+      {n:'Bedrail or Bumper',qpd:0,fixed:1},{n:'Bed Flashlight',qpd:0,fixed:1}
+    ],
+    'Diaper Bag':[
+      {n:'Plastic table cloths',qpd:0,fixed:1},{n:'Diapers (bag)',qpd:8,fixed:0},
+      {n:'Diaper Liner',qpd:0,fixed:1},{n:'Wipes',qpd:0,fixed:1},{n:'Tissues',qpd:0,fixed:1},
+      {n:'Two pairs pants',qpd:0,fixed:1},{n:'Shirt',qpd:0,fixed:1},
+      {n:'Bibs (bag)',qpd:5,fixed:0},{n:'Toothettes (bag)',qpd:4,fixed:0},
+      {n:'Headphones/headband',qpd:0,fixed:1},{n:'IPod',qpd:0,fixed:1},
+      {n:'Portable charger',qpd:0,fixed:1},{n:'Emergency kit',qpd:0,fixed:1},
+      {n:'Band aides',qpd:0,fixed:1},{n:'Meds',qpd:0,fixed:1},{n:'Food bag',qpd:0,fixed:1},
+      {n:'Hat',qpd:0,fixed:1},{n:'Puke bucket',qpd:0,fixed:1},
+      {n:'Zip lock bags for food',qpd:0,fixed:1},{n:'Snacks',qpd:0,fixed:1},
+      {n:'Grocery bags',qpd:0,fixed:1},{n:'Umbrella',qpd:0,fixed:1},{n:'Raincoat',qpd:0,fixed:1},
+      {n:'Wheelchair tools (bag)',qpd:0,fixed:1},{n:'Zip ties',qpd:0,fixed:1},
+      {n:'Ear plugs',qpd:0,fixed:1},{n:'Poop bags',qpd:0,fixed:1},
+      {n:'Noise cancelling hf',qpd:0,fixed:1},{n:'Pill case',qpd:0,fixed:1},
+      {n:'Clorox wipes (bag)',qpd:0,fixed:1},{n:'iPad (bag)',qpd:0,fixed:1},
+      {n:'Toys',qpd:0,fixed:1},{n:'Straps',qpd:0,fixed:1},{n:'Books',qpd:0,fixed:1},
+      {n:'Carabiners (bag)',qpd:0,fixed:1}
+    ],
+    'Toys & Electronics':[
+      {n:'Jumper',qpd:0,fixed:1},{n:'Blue strap',qpd:0,fixed:1},{n:'Harness',qpd:0,fixed:1},
+      {n:'Harness towel',qpd:0,fixed:1},{n:'Chew Toys',qpd:0,fixed:1},
+      {n:'Toys straps',qpd:0,fixed:1},{n:'Books (room)',qpd:0,fixed:1},
+      {n:'Sensory Toys',qpd:0,fixed:1},{n:'Music Toys',qpd:0,fixed:1},
+      {n:'Toy cleaner',qpd:0,fixed:1},{n:'Bedtime bear',qpd:0,fixed:1},
+      {n:'Noise machine',qpd:0,fixed:1},{n:'Stories on iPad',qpd:0,fixed:1},
+      {n:'iPad',qpd:0,fixed:1},{n:'Command hook',qpd:0,fixed:1},{n:'Hanging strap',qpd:0,fixed:1},
+      {n:'IPod #1',qpd:0,fixed:1},{n:'IPod #2',qpd:0,fixed:1},
+      {n:'Plug in headphones',qpd:0,fixed:1},{n:'Bluetooth Headphones',qpd:0,fixed:1},
+      {n:'Chargers',qpd:0,fixed:1},{n:'IPod holder',qpd:0,fixed:1},
+      {n:'Baby Monitor',qpd:0,fixed:1},{n:'Air tag for luggage',qpd:0,fixed:1}
+    ],
+    'Airplane & Travel':[
+      {n:'Passport',qpd:0,fixed:1},{n:'Wheelchair handicap tag',qpd:0,fixed:1},
+      {n:'Notify airline of wheelchair',qpd:0,fixed:1},{n:'Wheelchair dimensions doc',qpd:0,fixed:1},
+      {n:'Seat cushion with bolster',qpd:0,fixed:1},{n:'Foot rest sling',qpd:0,fixed:1},
+      {n:'Organizer hanger',qpd:0,fixed:1},{n:'Neck Pillow',qpd:0,fixed:1},
+      {n:'Eye mask/hoodie',qpd:0,fixed:1},{n:'Water bottle (air)',qpd:0,fixed:1},
+      {n:'Food bag (see food list)',qpd:0,fixed:1},{n:'Toy bag (see toys list)',qpd:0,fixed:1},
+      {n:'Diaper bag (see other list)',qpd:0,fixed:1},{n:'Portable Battery Pack',qpd:0,fixed:1},
+      {n:'Car Seat Travel Bag',qpd:0,fixed:1},{n:'Wheelchair Travel Bag',qpd:0,fixed:1},
+      {n:'Swim Diaper (air)',qpd:0,fixed:1},{n:'Car seat',qpd:0,fixed:1},
+      {n:'Car seat travel bag',qpd:0,fixed:1},{n:'Window Sun Shade',qpd:0,fixed:1},
+      {n:'Handicap Placard',qpd:0,fixed:1},{n:'Car iPhone holder',qpd:0,fixed:1}
+    ],
+    'Pool & Beach':[
+      {n:'Beach Chair',qpd:0,fixed:1},{n:'Beach pop up tent',qpd:0,fixed:1},
+      {n:'Portable beach towel',qpd:0,fixed:1},{n:'Neck ring for pool',qpd:0,fixed:1},
+      {n:'Wet bag',qpd:0,fixed:1},{n:'Cooling Towel',qpd:0,fixed:1},
+      {n:'Fan',qpd:0,fixed:1},{n:'Water bottle',qpd:0,fixed:1}
+    ],
+    'Eyewear':[
+      {n:'Eyeglass wipes',qpd:0,fixed:1},{n:'Eyeglasses',qpd:0,fixed:1},
+      {n:'Sunglasses',qpd:0,fixed:1},{n:'Chums',qpd:0,fixed:1}
+    ],
+    'Disney & Theme Park':[
+      {n:'Pirate costume',qpd:0,fixed:1},{n:'Disney Hat',qpd:0,fixed:1},
+      {n:'Magic band',qpd:0,fixed:1},{n:'Magic Band Charger',qpd:0,fixed:1},
+      {n:'Disney shirts',qpd:0,fixed:1},{n:'Autograph book',qpd:0,fixed:1},
+      {n:'Mickey ears',qpd:0,fixed:1},{n:'Portable phone charger',qpd:0,fixed:1},
+      {n:'Comfortable walking shoes',qpd:0,fixed:1}
+    ]
+  }},
+  Angie:{emoji:'💜',categories:{
+    'Clothes':[
+      {n:'Socks',qpd:1,fixed:0},{n:'Undies',qpd:1.5,fixed:0},{n:'Bras',qpd:0.5,fixed:0},
+      {n:'Long Sleeve Shirts',qpd:0.5,fixed:0},{n:'Short Sleeve Shirts',qpd:1,fixed:0},
+      {n:'Sweater',qpd:0.25,fixed:0},{n:'Tank Tops',qpd:0.25,fixed:0},
+      {n:'Dresses',qpd:0.25,fixed:0},{n:'Skirts',qpd:0.25,fixed:0},{n:'Pants',qpd:0.5,fixed:0},
+      {n:'Rain Jacket',qpd:0,fixed:1},{n:'Hoodie',qpd:0.25,fixed:0},{n:'Hats',qpd:0.25,fixed:0},
+      {n:'Shorts',qpd:1,fixed:0},{n:'Pajamas',qpd:0.3,fixed:0},{n:'Formal Wear',qpd:0,fixed:1},
+      {n:'Shoes',qpd:0,fixed:1},{n:'Sandals',qpd:0,fixed:1},{n:'Swimsuit',qpd:0.5,fixed:0},
+      {n:'Swim cover',qpd:0.3,fixed:0},{n:'Swim shoes',qpd:0,fixed:1},{n:'Jacket',qpd:0,fixed:1}
+    ],
+    'Disney':[
+      {n:'Disney Sweater',qpd:0,fixed:1},{n:'Poncho',qpd:0,fixed:1},{n:'Disney Socks',qpd:0,fixed:1},
+      {n:'Disney Shirts',qpd:0,fixed:1},{n:'Mickey Ears',qpd:0,fixed:1},
+      {n:'Magic Band',qpd:0,fixed:1},{n:'Magic Band Charger',qpd:0,fixed:1},
+      {n:'Pirate Costume',qpd:0,fixed:1}
+    ],
+    'Electronics':[
+      {n:'Portable Battery Pack',qpd:0,fixed:1},{n:'Charger for phone',qpd:0,fixed:1},
+      {n:'Charger for watch',qpd:0,fixed:1},{n:'Headphones',qpd:0,fixed:1},
+      {n:'Phone',qpd:0,fixed:1},{n:'Watch',qpd:0,fixed:1},{n:'Air tag for luggage',qpd:0,fixed:1},
+      {n:'iPad',qpd:0,fixed:1},{n:'Book Light',qpd:0,fixed:1},{n:'Flashlight',qpd:0,fixed:1},
+      {n:'Airpods',qpd:0,fixed:1},{n:'Noise Cancelling Headphones',qpd:0,fixed:1},{n:'Book',qpd:0,fixed:1}
+    ],
+    'Health & Beauty':[
+      {n:'Tooth brush',qpd:0,fixed:1},{n:'Tooth paste',qpd:0,fixed:1},{n:'Dental Floss Picks',qpd:0,fixed:1},
+      {n:'Jewelry',qpd:0,fixed:1},{n:'Perfume',qpd:0,fixed:1},{n:'Makeup',qpd:0,fixed:1},
+      {n:'Face Lotion',qpd:0,fixed:1},{n:'Face Sunscreen',qpd:0,fixed:1},
+      {n:'Hair Clips/Pins',qpd:0,fixed:1},{n:'Curling Iron',qpd:0,fixed:1},
+      {n:'Flat Iron',qpd:0,fixed:1},{n:'Hair Spray',qpd:0,fixed:1},{n:'Hair Brush',qpd:0,fixed:1},
+      {n:'Ear plugs',qpd:0,fixed:1},{n:'Eye mask',qpd:0,fixed:1},{n:'Vitamins',qpd:1.1,fixed:0},
+      {n:'RX Meds AM/PM',qpd:0,fixed:1},{n:'Contacts',qpd:0,fixed:1},
+      {n:'Contact Solution',qpd:0,fixed:1},{n:'Shaver',qpd:0,fixed:1},{n:'Chapstick',qpd:0,fixed:1},
+      {n:'Deodorant',qpd:0,fixed:1},{n:'Shampoo',qpd:0,fixed:1},{n:'Conditioner',qpd:0,fixed:1},
+      {n:'Loofa',qpd:0,fixed:1},{n:'Body Wash',qpd:0,fixed:1},{n:'Qtips',qpd:0,fixed:1},
+      {n:'Cotton Balls',qpd:0,fixed:1},{n:'Face Wash',qpd:0,fixed:1},
+      {n:'Makeup Remover Wipes',qpd:0,fixed:1},{n:'Tweezers',qpd:0,fixed:1},{n:'Nail Kit',qpd:0,fixed:1}
+    ],
+    'On-the-Go':[
+      {n:'Fanny Pack',qpd:0,fixed:1},{n:'Purse',qpd:0,fixed:1},{n:'Sunglasses',qpd:0,fixed:1},
+      {n:'Glasses',qpd:0,fixed:1},{n:'Glasses case',qpd:0,fixed:1},{n:'Glasses wipes',qpd:0,fixed:1},
+      {n:'Drivers License',qpd:0,fixed:1},{n:'Credit Card',qpd:0,fixed:1},
+      {n:'Call Bank about travel',qpd:0,fixed:1},{n:'Cash',qpd:0,fixed:1},
+      {n:'Debit card',qpd:0,fixed:1},{n:'AAA card',qpd:0,fixed:1},
+      {n:'Concealed weapons ID',qpd:0,fixed:1},{n:'Pen',qpd:0,fixed:1},
+      {n:'Pad of paper',qpd:0,fixed:1},{n:'Water Bottle',qpd:0,fixed:1},
+      {n:'Tissues',qpd:0,fixed:1},{n:'Pocket Knife',qpd:0,fixed:1}
+    ],
+    'Pool/Beach':[
+      {n:'Drink Koozie',qpd:0,fixed:1},{n:'Sun Hat',qpd:0,fixed:1},{n:'Sunscreen',qpd:0,fixed:1},
+      {n:'Wet Bag',qpd:0,fixed:1},{n:'Fan',qpd:0,fixed:1},{n:'Towel',qpd:0,fixed:1},
+      {n:'Waterproof iPhone Holder',qpd:0,fixed:1}
+    ],
+    'Airplane':[
+      {n:'Neck Pillow',qpd:0,fixed:1},{n:'Eye mask/hoodie',qpd:0,fixed:1},
+      {n:'Ear Plugs',qpd:0,fixed:1},{n:'Snacks',qpd:0,fixed:1},{n:'Gum',qpd:0,fixed:1},
+      {n:'Travel Backpack',qpd:0,fixed:1},{n:'Passport',qpd:0,fixed:1},
+      {n:'Luggage Tag',qpd:0,fixed:1},{n:'Luggage Lock',qpd:0,fixed:1},{n:'Luggage Weight',qpd:0,fixed:1}
+    ]
+  }},
+  Maddy:{emoji:'🌸',categories:{
+    'Clothes':[
+      {n:'Socks',qpd:1,fixed:0},{n:'Undies',qpd:1.5,fixed:0},{n:'Bras',qpd:0.5,fixed:0},
+      {n:'Long Sleeve Shirts',qpd:0.5,fixed:0},{n:'Short Sleeve Shirts',qpd:1,fixed:0},
+      {n:'Sweater',qpd:0.25,fixed:0},{n:'Tank Tops',qpd:0.25,fixed:0},
+      {n:'Dresses',qpd:0.25,fixed:0},{n:'Skirts',qpd:0.25,fixed:0},{n:'Pants',qpd:0.5,fixed:0},
+      {n:'Rain Jacket',qpd:0,fixed:1},{n:'Hoodie',qpd:0.25,fixed:0},{n:'Hats',qpd:0.25,fixed:0},
+      {n:'Shorts',qpd:1,fixed:0},{n:'Pajamas',qpd:0.3,fixed:0},{n:'Formal Wear',qpd:0,fixed:1},
+      {n:'Shoes',qpd:0,fixed:1},{n:'Sandals',qpd:0,fixed:1},{n:'Swimsuit',qpd:0.5,fixed:0},
+      {n:'Swim cover',qpd:0.3,fixed:0},{n:'Swim shoes',qpd:0,fixed:1},{n:'Jacket',qpd:0,fixed:1},
+      {n:'T Shirts',qpd:1,fixed:0},{n:'Underwear',qpd:1,fixed:0}
+    ],
+    'Disney':[
+      {n:'Disney Sweater',qpd:0,fixed:1},{n:'Disney Socks',qpd:1,fixed:0},{n:'Poncho',qpd:0,fixed:1},
+      {n:'Disney Shirts',qpd:0,fixed:1},{n:'Mickey Ears',qpd:0,fixed:1},
+      {n:'Magic Band',qpd:0,fixed:1},{n:'Glow Sticks',qpd:0,fixed:1},
+      {n:'Magic Band Charger',qpd:0,fixed:1},{n:'Pirate Costume',qpd:0,fixed:1}
+    ],
+    'Electronics':[
+      {n:'Charger for phone',qpd:0,fixed:1},{n:'Charger for watch',qpd:0,fixed:1},
+      {n:'Headphones',qpd:0,fixed:1},{n:'Phone',qpd:0,fixed:1},{n:'Watch',qpd:0,fixed:1},
+      {n:'Air tag for luggage',qpd:0,fixed:1},{n:'iPad',qpd:0,fixed:1},{n:'Book Light',qpd:0,fixed:1},
+      {n:'Flashlight',qpd:0,fixed:1},{n:'Noise Cancelling Headphones',qpd:0,fixed:1}
+    ],
+    'Entertainment':[
+      {n:'Book',qpd:0,fixed:1},{n:'Bears',qpd:0,fixed:1},{n:'Toys',qpd:0,fixed:1},{n:'Art Supplies',qpd:0,fixed:1}
+    ],
+    'Health & Beauty':[
+      {n:'Jewelry',qpd:0,fixed:1},{n:'Makeup',qpd:0,fixed:1},{n:'Hair Brush',qpd:0,fixed:1},
+      {n:'Ear plugs',qpd:0,fixed:1},{n:'Eye mask',qpd:0,fixed:1},{n:'Vitamins',qpd:1.1,fixed:0},
+      {n:'RX Meds AM/PM',qpd:1,fixed:0},{n:'Shaver',qpd:0,fixed:1},{n:'Chapstick',qpd:0,fixed:1},
+      {n:'Deodorant',qpd:0,fixed:1},{n:'Hair Bows',qpd:0,fixed:1},{n:'Hair Clips',qpd:0,fixed:1},
+      {n:'Hair Bands',qpd:0,fixed:1},{n:'Toothbrush',qpd:0,fixed:1},{n:'Toothpaste',qpd:0,fixed:1},
+      {n:'Floss',qpd:0,fixed:1}
+    ],
+    'On-the-Go':[
+      {n:'Fanny Pack',qpd:0,fixed:1},{n:'Purse',qpd:0,fixed:1},{n:'Sunglasses',qpd:0,fixed:1},
+      {n:'Glasses',qpd:0,fixed:1},{n:'Glasses case',qpd:0,fixed:1},{n:'Glasses wipes',qpd:0,fixed:1},
+      {n:'Cash',qpd:0,fixed:1},{n:'Debit card',qpd:0,fixed:1},{n:'Pen',qpd:0,fixed:1},
+      {n:'Pad of paper',qpd:0,fixed:1},{n:'Water Bottle',qpd:0,fixed:1},
+      {n:'Tissues',qpd:0,fixed:1},{n:'Blankets',qpd:0,fixed:1}
+    ],
+    'Pool/Beach':[
+      {n:'Sun Hat',qpd:0,fixed:1},{n:'Wet Bag',qpd:0,fixed:1},{n:'Towel',qpd:0,fixed:1},{n:'Fan',qpd:0,fixed:1}
+    ],
+    'Airplane':[
+      {n:'Neck Pillow',qpd:0,fixed:1},{n:'Eye mask/hoodie',qpd:0,fixed:1},
+      {n:'Ear Plugs',qpd:0,fixed:1},{n:'Snacks',qpd:0,fixed:1},{n:'Gum',qpd:0,fixed:1},
+      {n:'Travel Backpack',qpd:0,fixed:1},{n:'Extra outfit',qpd:0,fixed:1},
+      {n:'Extra swimsuit',qpd:0,fixed:1},{n:'Passport',qpd:0,fixed:1}
+    ]
+  }},
+  Ellie:{emoji:'⭐',categories:{
+    'Clothes':[
+      {n:'Socks',qpd:1,fixed:0},{n:'Undies',qpd:1.5,fixed:0},{n:'Bras',qpd:0.5,fixed:0},
+      {n:'Long Sleeve Shirts',qpd:0.5,fixed:0},{n:'Short Sleeve Shirts',qpd:1,fixed:0},
+      {n:'Sweater',qpd:0.25,fixed:0},{n:'Tank Tops',qpd:0.25,fixed:0},
+      {n:'Dresses',qpd:0.25,fixed:0},{n:'Skirts',qpd:0.25,fixed:0},{n:'Pants',qpd:0.5,fixed:0},
+      {n:'Rain Jacket',qpd:0,fixed:1},{n:'Hoodie',qpd:0.25,fixed:0},{n:'Hats',qpd:0.25,fixed:0},
+      {n:'Shorts',qpd:1,fixed:0},{n:'Pajamas',qpd:0.3,fixed:0},{n:'Formal Wear',qpd:0,fixed:1},
+      {n:'Shoes',qpd:0,fixed:1},{n:'Sandals',qpd:0,fixed:1},{n:'Swimsuit',qpd:0.5,fixed:0},
+      {n:'Swim cover',qpd:0.3,fixed:0},{n:'Swim shoes',qpd:0,fixed:1},{n:'Jacket',qpd:0,fixed:1},
+      {n:'T Shirts',qpd:1,fixed:0},{n:'Underwear',qpd:1,fixed:0}
+    ],
+    'Disney':[
+      {n:'Disney Sweater',qpd:0,fixed:1},{n:'Poncho',qpd:0,fixed:1},{n:'Disney Socks',qpd:0,fixed:1},
+      {n:'Glow Sticks',qpd:0,fixed:1},{n:'Disney Shirts',qpd:0,fixed:1},{n:'Mickey Ears',qpd:0,fixed:1},
+      {n:'Magic Band',qpd:0,fixed:1},{n:'Magic Band Charger',qpd:0,fixed:1},{n:'Pirate Costume',qpd:0,fixed:1}
+    ],
+    'Electronics':[
+      {n:'Charger for phone',qpd:0,fixed:1},{n:'Charger for watch',qpd:0,fixed:1},
+      {n:'Headphones',qpd:0,fixed:1},{n:'Phone',qpd:0,fixed:1},{n:'Watch',qpd:0,fixed:1},
+      {n:'Air tag for luggage',qpd:0,fixed:1},{n:'iPad',qpd:0,fixed:1},{n:'Book Light',qpd:0,fixed:1},
+      {n:'Flashlight',qpd:0,fixed:1},{n:'Noise Cancelling Headphones',qpd:0,fixed:1},
+      {n:'Nintendo Switch',qpd:0,fixed:1},{n:'Nintendo games',qpd:0,fixed:1},
+      {n:'Nintendo headphones',qpd:0,fixed:1},{n:'Nintendo case',qpd:0,fixed:1},
+      {n:'Nintendo charger',qpd:0,fixed:1},{n:'iPad Charger',qpd:0,fixed:1},
+      {n:'iPad downloaded movies',qpd:0,fixed:1}
+    ],
+    'Entertainment':[
+      {n:'Book',qpd:0,fixed:1},{n:'Bears',qpd:0,fixed:1},{n:'Toys',qpd:0,fixed:1},{n:'Art Supplies',qpd:0,fixed:1}
+    ],
+    'Health & Beauty':[
+      {n:'Jewelry',qpd:0,fixed:1},{n:'Makeup',qpd:0,fixed:1},{n:'Hair Brush',qpd:0,fixed:1},
+      {n:'Ear plugs',qpd:0,fixed:1},{n:'Eye mask',qpd:0,fixed:1},{n:'Vitamins',qpd:1.1,fixed:0},
+      {n:'RX Meds AM/PM',qpd:1,fixed:0},{n:'Shaver',qpd:0,fixed:1},{n:'Chapstick',qpd:0,fixed:1},
+      {n:'Deodorant',qpd:0,fixed:1},{n:'Hair Bows',qpd:0,fixed:1},{n:'Hair Clips',qpd:0,fixed:1},
+      {n:'Hair Bands',qpd:0,fixed:1},{n:'Toothbrush',qpd:0,fixed:1},{n:'Toothpaste',qpd:0,fixed:1},
+      {n:'Floss',qpd:0,fixed:1}
+    ],
+    'On-the-Go':[
+      {n:'Fanny Pack',qpd:0,fixed:1},{n:'Purse',qpd:0,fixed:1},{n:'Sunglasses',qpd:0,fixed:1},
+      {n:'Glasses',qpd:0,fixed:1},{n:'Glasses case',qpd:0,fixed:1},{n:'Glasses wipes',qpd:0,fixed:1},
+      {n:'Cash',qpd:0,fixed:1},{n:'Debit card',qpd:0,fixed:1},{n:'Pen',qpd:0,fixed:1},
+      {n:'Pad of paper',qpd:0,fixed:1},{n:'Water Bottle',qpd:0,fixed:1},
+      {n:'Tissues',qpd:0,fixed:1},{n:'Blankets',qpd:0,fixed:1}
+    ],
+    'Pool/Beach':[
+      {n:'Sun Hat',qpd:0,fixed:1},{n:'Wet Bag',qpd:0,fixed:1},{n:'Towel',qpd:0,fixed:1},
+      {n:'Fan',qpd:0,fixed:1},{n:'Swim goggles',qpd:0,fixed:1}
+    ],
+    'Airplane':[
+      {n:'Neck Pillow',qpd:0,fixed:1},{n:'Eye mask/hoodie',qpd:0,fixed:1},
+      {n:'Ear Plugs',qpd:0,fixed:1},{n:'Snacks',qpd:0,fixed:1},{n:'Gum',qpd:0,fixed:1},
+      {n:'Travel Backpack',qpd:0,fixed:1},{n:'Extra outfit',qpd:0,fixed:1},
+      {n:'Extra swimsuit',qpd:0,fixed:1},{n:'Passport',qpd:0,fixed:1}
+    ]
+  }},
+  Family:{emoji:'🏠',categories:{
+    'Essentials':[
+      {n:'Beach chair straps',qpd:0,fixed:1},{n:'Blister guard',qpd:0,fixed:1},
+      {n:'Bluetooth Speaker',qpd:0,fixed:1},{n:'Clorox wipes',qpd:0,fixed:1},
+      {n:'Extra Van and Car keys',qpd:0,fixed:1},{n:'Flashlight',qpd:0,fixed:1},
+      {n:'Grocery bags',qpd:0,fixed:1},{n:'Hotel Door Lock',qpd:0,fixed:1},
+      {n:'Laundry bags',qpd:0,fixed:1},{n:'Laundry detergent',qpd:0,fixed:1},
+      {n:'Laundry drying pins',qpd:0,fixed:1},{n:'Laundry soap',qpd:0,fixed:1},
+      {n:'Mosquito spray',qpd:0,fixed:1},{n:'Paper towels',qpd:0,fixed:1},
+      {n:'Phone magnet for car',qpd:0,fixed:1},{n:'Safety pins',qpd:0,fixed:1},
+      {n:'Sewing kit',qpd:0,fixed:1},{n:'Stain pen',qpd:0,fixed:1},
+      {n:'Sunblock',qpd:0,fixed:1},{n:'Tissues',qpd:0,fixed:1},
+      {n:'Umbrella',qpd:0,fixed:1},{n:'Zip lock bags',qpd:0,fixed:1}
+    ],
+    'Health & Safety':[
+      {n:'Allergy eye drops',qpd:0,fixed:1},{n:'Allergy Meds',qpd:0,fixed:1},
+      {n:'Anti Diarrhea meds',qpd:0,fixed:1},{n:'Bandaides',qpd:0,fixed:1},
+      {n:'Blister guard',qpd:0,fixed:1},{n:'Cold Meds',qpd:0,fixed:1},
+      {n:'Cough Drops',qpd:0,fixed:1},{n:'Covid Tests',qpd:0,fixed:1},
+      {n:'Eye drops',qpd:0,fixed:1},{n:'Flashlight',qpd:0,fixed:1},
+      {n:'Hand sanitizer',qpd:0,fixed:1},{n:'IB',qpd:0,fixed:1},
+      {n:'Itch Cream',qpd:0,fixed:1},{n:'Itch Steroid',qpd:0,fixed:1},
+      {n:'Masks',qpd:0,fixed:1},{n:'Melatonin',qpd:0,fixed:1},
+      {n:'Mosquito spray',qpd:0,fixed:1},{n:'Nausea Meds',qpd:0,fixed:1},
+      {n:'Pepto',qpd:0,fixed:1},{n:'Polysporin',qpd:0,fixed:1},
+      {n:'Rubber bands',qpd:0,fixed:1},{n:'Safety pins',qpd:0,fixed:1},
+      {n:'Scissors',qpd:0,fixed:1},{n:'Sunblock',qpd:0,fixed:1},
+      {n:'Throat meds',qpd:0,fixed:1},{n:'Tissues',qpd:0,fixed:1},
+      {n:'Tools',qpd:0,fixed:1},{n:'Tums',qpd:0,fixed:1},
+      {n:'Tylenol',qpd:0,fixed:1},{n:'Vitamins',qpd:0,fixed:1}
+    ],
+    'Road Trip':[
+      {n:'Baby wipes',qpd:0,fixed:1},{n:'Clorox wipes',qpd:0,fixed:1},
+      {n:'Cooler',qpd:0,fixed:1},{n:'Drinks',qpd:0,fixed:1},
+      {n:'Extra topper key',qpd:0,fixed:1},{n:'Garbage bags',qpd:0,fixed:1},
+      {n:'Headphone batteries',qpd:0,fixed:1},{n:'Nausea glasses',qpd:0,fixed:1},
+      {n:'Nausea meds',qpd:0,fixed:1},{n:'Puke bag',qpd:0,fixed:1},
+      {n:'Treats',qpd:0,fixed:1},{n:'Window visor',qpd:0,fixed:1}
+    ]
+  }}
+};
+
+const SK='millerPacking2026_v3';
+let state={days:10,checked:{},lists:null};
+let editMode=false,curP='Noah',curF='All',pendingDel=null;
+
+function loadState(){
+  try{const s=localStorage.getItem(SK);if(s){const p=JSON.parse(s);state.days=p.days??10;state.checked=p.checked??{};state.lists=p.lists??null;}}catch(e){}
+  if(!state.lists)state.lists=JSON.parse(JSON.stringify(DD));
+}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(state));}catch(e){}}
+function L(){return state.lists;}
+function calcQty(item){return item.qpd>0?Math.max(1,Math.ceil(item.qpd*state.days)):item.fixed;}
+function ck(p,c,n){return p+'|'+c+'|'+n;}
+function isChk(p,c,n){return!!state.checked[ck(p,c,n)];}
+function toggleItem(p,c,n){if(editMode)return;state.checked[ck(p,c,n)]=!state.checked[ck(p,c,n)];saveState();renderContent();updateProg();renderTabs();}
+
+function pCounts(p){let t=0,d=0;for(const c in L()[p].categories)for(const i of L()[p].categories[c]){t++;if(isChk(p,c,i.n))d++;}return{t,d};}
+function cCounts(p,c){let t=0,d=0;for(const i of L()[p].categories[c]){t++;if(isChk(p,c,i.n))d++;}return{t,d};}
+
+function toggleEditMode(){editMode=!editMode;document.getElementById('editBtn').classList.toggle('active-mode',editMode);document.getElementById('editBtn').textContent=editMode?'✅ Done':'✏️ Edit';document.getElementById('headerSub').textContent=editMode?'Edit items, quantities & categories':'Tap any item to pack it';renderAll();}
+
+function updateItemQty(p,c,idx,val){const v=parseFloat(val);if(isNaN(v)||v<0)return;const item=L()[p].categories[c][idx];if(item.qpd>0)item.qpd=v;else item.fixed=Math.round(v);saveState();updateProg();renderTabs();}
+function toggleRate(p,c,idx){const item=L()[p].categories[c][idx];if(item.qpd>0){item.fixed=Math.max(1,Math.ceil(item.qpd*state.days));item.qpd=0;}else{item.qpd=Math.max(0.1,+(item.fixed/state.days).toFixed(2));item.fixed=0;}saveState();renderContent();}
+
+function escAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function safeId(p,c){return (p+'_'+c).replace(/[^a-zA-Z0-9]/g,'_');}
+
+function promptDelItem(p,c,idx){pendingDel={type:'item',p,c,idx};document.getElementById('delItemMsg').textContent='Delete "'+L()[p].categories[c][idx].n+'" from '+c+'? This cannot be undone.';openOv('delItemModal');}
+function confirmDelItem(){if(!pendingDel)return;const{p,c,idx}=pendingDel;const rm=L()[p].categories[c].splice(idx,1)[0];delete state.checked[ck(p,c,rm.n)];saveState();closeModal('delItemModal');renderAll();}
+function promptDelCat(p,c){pendingDel={type:'cat',p,c};document.getElementById('delCatMsg').textContent='Delete the entire "'+c+'" category for '+p+'? All '+L()[p].categories[c].length+' items will be removed.';openOv('delCatModal');}
+function confirmDelCat(){if(!pendingDel)return;const{p,c}=pendingDel;L()[p].categories[c].forEach(i=>delete state.checked[ck(p,c,i.n)]);delete L()[p].categories[c];if(curF===c)curF='All';saveState();closeModal('delCatModal');renderAll();}
+
+function addItem(p,c){const sid=safeId(p,c);const ni=document.getElementById('ai_'+sid);const qi=document.getElementById('aq_'+sid);const name=(ni.value||'').trim();if(!name){ni.focus();return;}const qty=parseInt(qi.value)||1;L()[p].categories[c].push({n:name,qpd:0,fixed:qty});ni.value='';qi.value='1';saveState();renderContent();updateProg();renderTabs();ni.focus();}
+function addCat(p){const sid=safeId(p,'cat');const inp=document.getElementById('ac_'+sid);const name=(inp.value||'').trim();if(!name||L()[p].categories[name]){inp.value='';return;}L()[p].categories[name]=[];inp.value='';saveState();renderAll();}
+
+function changeDays(d){state.days=Math.max(1,Math.min(30,state.days+d));document.getElementById('daysVal').textContent=state.days;saveState();renderContent();updateProg();renderTabs();}
+
+function openReset(){document.getElementById('resetPersonName').textContent=curP;openOv('resetModal');}
+function resetPerson(){for(const c in L()[curP].categories)L()[curP].categories[c].forEach(i=>delete state.checked[ck(curP,c,i.n)]);saveState();closeModal('resetModal');renderAll();}
+function resetAll(){state.checked={};saveState();closeModal('resetModal');renderAll();}
+function openOv(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');pendingDel=null;}
+
+function renderTabs(){const con=document.getElementById('personTabs');con.innerHTML='';for(const[p,data]of Object.entries(L())){const{t,d}=pCounts(p);const btn=document.createElement('button');btn.className='tab'+(p===curP?' active':'');btn.innerHTML=data.emoji+' '+p+' <span class="badge">'+d+'/'+t+'</span>';btn.onclick=(()=>{const _p=p;return()=>{curP=_p;curF='All';renderAll();}})();con.appendChild(btn);}}
+
+function renderFilters(){const con=document.getElementById('catFilters');con.innerHTML='';const cats=Object.keys(L()[curP].categories);const allC=document.createElement('button');allC.className='chip'+(curF==='All'?' active':'');allC.textContent='All';allC.onclick=()=>{curF='All';renderFilters();renderContent();};con.appendChild(allC);for(const cat of cats){const ch=document.createElement('button');ch.className='chip'+(curF===cat?' active':'');ch.textContent=cat;ch.onclick=(()=>{const _c=cat;return()=>{curF=_c;renderFilters();renderContent();}})();con.appendChild(ch);}}
+
+function renderContent(){
+  const container=document.getElementById('content');
+  const cats=L()[curP].categories;
+  const keys=curF==='All'?Object.keys(cats):[curF];
+  container.innerHTML='';
+  const p=curP;
+  for(const cat of keys){
+    if(!cats[cat])continue;
+    const items=cats[cat];
+    const{t,d}=cCounts(p,cat);
+    const allDone=d===t&&t>0;
+    const block=document.createElement('div');
+    block.className='cat-block';
+    const hdr=document.createElement('div');
+    hdr.className='cat-header';
+    const countEl=document.createElement('span');
+    countEl.className='cat-count'+(allDone?' done':'');
+    countEl.textContent=d+'/'+t;
+    if(editMode){
+      const sp=document.createElement('span');sp.style.flex='1';sp.textContent=cat;hdr.appendChild(sp);hdr.appendChild(countEl);
+      const dc=document.createElement('button');dc.className='cat-del-btn';dc.innerHTML='🗑';
+      const _c=cat;dc.onclick=()=>promptDelCat(p,_c);hdr.appendChild(dc);
+    }else{
+      hdr.appendChild(document.createTextNode(cat+' '));hdr.appendChild(countEl);
+      if(allDone){const sp=document.createElement('span');sp.textContent=' ✅';hdr.appendChild(sp);}
+    }
+    block.appendChild(hdr);
+    const list=document.createElement('div');list.className='items-list';
+    items.forEach((item,idx)=>{
+      const checked=isChk(p,cat,item.n);
+      const qty=calcQty(item);
+      const row=document.createElement('div');
+      if(editMode){
+        row.className='item-row edit-row';
+        const isDyn=item.qpd>0;
+        const qVal=isDyn?item.qpd:item.fixed;
+        const nm=document.createElement('div');nm.className='item-name';nm.textContent=item.n;
+        const ec=document.createElement('div');ec.className='edit-controls';
+        const rb=document.createElement('button');rb.className='rate-btn'+(isDyn?' active':'');rb.textContent=isDyn?'×/day':'fixed';
+        const _p=p,_c=cat,_i=idx;
+        rb.onclick=()=>toggleRate(_p,_c,_i);
+        const qe=document.createElement('input');qe.className='qty-edit';qe.type='number';qe.min='0';qe.step=isDyn?'0.1':'1';qe.value=qVal;
+        qe.onchange=()=>updateItemQty(_p,_c,_i,qe.value);qe.onclick=()=>qe.select();
+        const db=document.createElement('button');db.className='del-btn';db.innerHTML='🗑';
+        db.onclick=()=>promptDelItem(_p,_c,_i);
+        ec.appendChild(rb);ec.appendChild(qe);ec.appendChild(db);
+        row.appendChild(nm);row.appendChild(ec);
+      }else{
+        row.className='item-row'+(checked?' checked':'');
+        const cc=document.createElement('div');cc.className='check-circle';
+        const ck2=document.createElement('span');ck2.className='checkmark';ck2.textContent='✓';cc.appendChild(ck2);
+        const nm=document.createElement('div');nm.className='item-name';nm.textContent=item.n;
+        row.appendChild(cc);row.appendChild(nm);
+        if(qty>1){const qd=document.createElement('div');qd.className='item-qty';qd.textContent='×'+qty;row.appendChild(qd);}
+        const _p=p,_c=cat,_n=item.n;
+        row.addEventListener('click',()=>toggleItem(_p,_c,_n));
+      }
+      list.appendChild(row);
+    });
+    if(editMode){
+      const sid=safeId(p,cat);
+      const ar=document.createElement('div');ar.className='add-item-row';
+      ar.innerHTML='<input id="ai_'+sid+'" class="add-input" type="text" placeholder="Add item…"><input id="aq_'+sid+'" class="add-qty" type="number" min="1" value="1"><button class="add-btn">+ Add</button>';
+      ar.querySelector('input').addEventListener('keydown',function(e){if(e.key==='Enter'){const _p=p,_c=cat;addItem(_p,_c);}});
+      ar.querySelector('.add-btn').onclick=(()=>{const _p=p,_c=cat;return()=>addItem(_p,_c);})();
+      list.appendChild(ar);
+    }
+    block.appendChild(list);container.appendChild(block);
+  }
+  if(editMode&&curF==='All'){
+    const sid=safeId(p,'cat');
+    const acr=document.createElement('div');acr.className='add-cat-row';
+    acr.innerHTML='<input id="ac_'+sid+'" class="add-cat-input" type="text" placeholder="New category name…"><button class="add-cat-btn">+ Category</button>';
+    acr.querySelector('input').addEventListener('keydown',function(e){if(e.key==='Enter')addCat(p);});
+    acr.querySelector('.add-cat-btn').onclick=()=>addCat(p);
+    container.appendChild(acr);
+  }
+}
+
+function updateProg(){const{t,d}=pCounts(curP);const pct=t?Math.round(d/t*100):0;document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressLabel').textContent=pct+'%';}
+function renderAll(){renderTabs();renderFilters();renderContent();updateProg();}
+
+loadState();
+document.getElementById('daysVal').textContent=state.days;
+renderAll();
+['resetModal','delItemModal','delCatModal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});});
+
+</script>
+</body>
+</html>
